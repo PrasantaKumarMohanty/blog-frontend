@@ -150,9 +150,9 @@ const LoginPage: React.FC = () => {
 
 
                     </form>
-                    <div className='text-[#718092] w-full text-center block text-sm my-4'>
+{/*                     <div className='text-[#718092] w-full text-center block text-sm my-4'>
                         or continue with
-                    </div>
+                    </div> */}
 
                     <div className="flex items-center justify-center text-[#718092]">
                         {/* <button className="mr-4 bg-white border py-2 w-5/12 rounded-xl flex justify-center items-center text-sm hover:scale-110 duration-300 shadow-md shadow-[#c2d9fe]">
