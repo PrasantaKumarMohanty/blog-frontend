@@ -28,7 +28,7 @@ const Home: React.FC = () => {
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: 'https://blogs-g2mr.onrender.com/blogs/all-blogs?page=${page}&pageSize=12',
+            url: `https://blogs-g2mr.onrender.com/blogs/all-blogs?page=${page}&pageSize=12`,
             headers: {},
             data: data
         };
