@@ -24,7 +24,7 @@ const Home: React.FC = () => {
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: 'http://localhost:5000/blogs/all-blogs',
+            url: 'https://blogs-g2mr.onrender.com/blogs/all-blogs',
             headers: {},
             data: data
         };
@@ -54,6 +54,7 @@ const Home: React.FC = () => {
                 handleOpen={handleOpen}
                 handleClose={handleClose}
                 message={"Add a new Blog"}
+                id={""}
             />
 
             <div className='sticky top-0'>
@@ -78,7 +79,7 @@ const Home: React.FC = () => {
                         return (
                             <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
                                 <div className="overflow-hidden rounded-lg shadow-lg">
-                                    <img alt="Placeholder" className="block h-auto w-full" src="https://picsum.photos/600/400/?random" />
+                                    <img alt="Placeholder" className="block h-auto max-h-48 w-full" src={blog?.image} />
                                     <div className="flex items-center justify-between leading-tight p-2 md:p-4">
                                         <h1 className="text-lg">
                                             <div className="no-underline hover:underline text-black">

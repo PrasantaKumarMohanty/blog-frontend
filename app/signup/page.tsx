@@ -40,7 +40,7 @@ const SignUp: React.FC = () => {
             let config = {
                 method: 'post',
                 maxBodyLength: Infinity,
-                url: 'http://localhost:5000/blogs/signup',
+                url: 'https://blogs-g2mr.onrender.com/blogs/signup',
                 headers: {
                     'Content-Type': 'application/json'
                 },

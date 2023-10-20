@@ -40,7 +40,7 @@ const LoginPage: React.FC = () => {
             let config = {
                 method: 'post',
                 maxBodyLength: Infinity,
-                url: 'http://localhost:5000/blogs/login',
+                url: 'https://blogs-g2mr.onrender.com/blogs/login',
                 headers: {
                     'Content-Type': 'application/json'
                 },

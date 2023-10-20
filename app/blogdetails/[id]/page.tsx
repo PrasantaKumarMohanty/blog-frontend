@@ -23,7 +23,7 @@ const BlogDetails = ({ params }: {
         let config = {
             method: 'get',
             maxBodyLength: Infinity,
-            url: `http://localhost:5000/blogs/search-blog/${id}`,
+            url: `https://blogs-g2mr.onrender.com/blogs/search-blog/${id}`,
             headers: {},
             data: data
         };
@@ -44,7 +44,7 @@ const BlogDetails = ({ params }: {
         let config = {
             method: 'delete',
             maxBodyLength: Infinity,
-            url: `http://localhost:5000/blogs/delete-blog/${id}`,
+            url: `https://blogs-g2mr.onrender.com/blogs/delete-blog/${id}`,
             headers: {},
             data: data
         };
@@ -66,6 +66,7 @@ const BlogDetails = ({ params }: {
                 handleOpen={handleOpen}
                 handleClose={handleClose}
                 message={"Edit the Blog"}
+                id={id}
             />
 
             {[blogdetails]?.map((blog: any) => {
@@ -76,7 +77,7 @@ const BlogDetails = ({ params }: {
                                 {blog?.title}
                             </h1>
                             <div className="flex items-center justify-center mt-7">
-                                <img className="w-9/12 h-9/12 rounded-full" src="https://source.unsplash.com/random/200x200" alt="Avatar" />
+                                <img className="w-9/12 h-9/12 rounded-full" src={blog?.image} alt="Avatar" />
                             </div>
                         </div>
 
@@ -86,7 +87,7 @@ const BlogDetails = ({ params }: {
                                     <div className="text-base leading-8 my-5">
                                         Created Date : {blog?.createdDate?.substring(0, 10)}
                                     </div>
-                                    <div className="text-xl text-cente font-bold my-5">
+                                    <div className="text-xl text-cente font-semibold my-5">
                                         {blog?.description}
                                     </div>
                                 </div>
