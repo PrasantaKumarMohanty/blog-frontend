@@ -33,10 +33,10 @@ const Modals: React.FC<EditModalProps> = ({ open, handleOpen, handleClose, messa
     const today = new Date();
     const [selectedImgFile, setSelectedImgFile] = useState(null);
     const [date, setDate] = useState(today.toString().substring(4, 15));
-    const [description, setDescription] = useState('')
-    const cloudName = 'dvxsd4rds';
-    const apiKey = '463519234327466';
-    const apiSecret = 'GhV9vPswNf9Em8tFkJyPUjVN294'
+    const [description, setDescription] = useState('');
+    const [loader, setLoader] = useState(false);
+
+    const cloudName = process.env.NEXT_PUBLIC_ANALYTICS_ID
     const randomImg = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSezeZV4X0U6iMxfjDDDZfd6kGr_r91-kGseQ&usqp=CAU'
 
     const formik = useFormik({
@@ -45,7 +45,7 @@ const Modals: React.FC<EditModalProps> = ({ open, handleOpen, handleClose, messa
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            console.log("values", message);
+            setLoader(true);
 
             if (message == "Add a new Blog") {
                 let data = JSON.stringify({
@@ -68,9 +68,11 @@ const Modals: React.FC<EditModalProps> = ({ open, handleOpen, handleClose, messa
                 axios.request(config)
                     .then((response) => {
                         // console.log(response.data);
+                        setLoader(false);
                         handleClose();
                     })
                     .catch((error) => {
+                        setLoader(false);
                         console.log(error);
                     });
             } else {
@@ -94,9 +96,11 @@ const Modals: React.FC<EditModalProps> = ({ open, handleOpen, handleClose, messa
                 axios.request(config)
                     .then((response) => {
                         // console.log(response.data);
+                        setLoader(false);
                         handleClose();
                     })
                     .catch((error) => {
+                        setLoader(false);
                         console.log(error);
                     });
 
@@ -131,7 +135,7 @@ const Modals: React.FC<EditModalProps> = ({ open, handleOpen, handleClose, messa
         <div>
             <Modal
                 open={open}
-                // onClose={handleClose}
+                onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -179,57 +183,30 @@ const Modals: React.FC<EditModalProps> = ({ open, handleOpen, handleClose, messa
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
-                                    placeholder="Enter your description"></textarea>
+                                    placeholder="Enter your description"
+                                    rows={2}></textarea>
                             </div>
 
                             <div className="mt-4">
                                 <button
                                     type="submit"
-                                    id="login-btn"
-                                    className="w-full px-4 py-2 text-white bg-[#01307c] rounded-lg hover:bg-[#01307c] transition ease-in-out hover:duration-300 focus:outline-none"
+                                    className="w-full h-10 w-full flex items-center justify-center text-white bg-[#01307c] rounded-lg hover:bg-[#0251d0] transition ease-in-out hover:duration-300 focus:outline-none"
                                 >
-                                    Create
+                                    {
+                                        loader
+                                            ?
+                                            <div className="w-7 h-7 rounded-full animate-spin border-4 border-solid border-white border-t-transparent"></div>
+                                            :
+                                            <div>
+                                                {
+                                                    message === "Add a new Blog" ? "Create" : "Edit"
+                                                }
+                                            </div>
+                                    }
                                 </button>
                             </div>
                         </div>
                     </form>
-                    {/* <form className="flex items-center justify-center">
-                        <div className="w-full max-w-md">
-                            <h1 className='font-bold text-2xl'>{message}</h1>
-                            <div className="mt-4">
-                                <label className="block text-gray-700 font-bold mb-2">Name</label>
-                                <input type="text"
-                                    className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
-                                    placeholder="Enter blog name" />
-                            </div>
-                            <div className="mt-4">
-                                <label className="block text-gray-700 font-bold mb-2">Date</label>
-                                <input type="text" className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500" />
-                            </div>
-
-                            <div className="mt-4">
-                                <label className="block text-gray-700 font-bold mb-2">Image</label>
-                                <input
-                                    onChange={handleFileUpload}
-                                    type="file"
-                                    className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500" />
-                            </div>
-
-                            <div className="mt-4">
-                                <label className="block text-gray-700 font-bold mb-2">Description</label>
-                                <textarea
-                                    className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
-                                    placeholder="Enter your description"></textarea>
-                            </div>
-
-                            <div className="mt-4">
-                                <button id="login-btn"
-                                    className="w-full px-4 py-2 text-white bg-[#01307c] rounded-lg hover:bg-[#01307c] transition ease-in-out hover:duration-300 focus:outline-none">
-                                    Create
-                                </button>
-                            </div>
-                        </div>
-                    </form> */}
                 </Box>
             </Modal>
         </div>

@@ -9,7 +9,8 @@ import * as Yup from 'yup';
 import axios from 'axios';
 
 const SignUp: React.FC = () => {
-    const router = useRouter()
+    const router = useRouter();
+    const [loader, setLoader] = useState(false);
 
     const validationSchema = Yup.object({
         email: Yup.string()
@@ -29,9 +30,7 @@ const SignUp: React.FC = () => {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            // alert(JSON.stringify(values, null, 2));
-            console.log("values", values.email, values.password)
-
+            setLoader(true);
             let data = JSON.stringify({
                 "email": values.email,
                 "password": values.password
@@ -50,10 +49,12 @@ const SignUp: React.FC = () => {
             axios.request(config)
                 .then((response) => {
                     console.log("Data", response.data);
+                    setLoader(false);
                     goToLogin();
                 })
                 .catch((error) => {
                     console.log(error);
+                    setLoader(false);
                     alert("Something went wrong !");
                 });
         },
@@ -113,9 +114,16 @@ const SignUp: React.FC = () => {
                     <div className="mt-6">
                         <button
                             type="submit"
-                            className="w-full px-4 py-2 text-white bg-[#01307c] rounded-lg hover:bg-[#0251d0] transition ease-in-out hover:duration-300 focus:outline-none"
+                            className="w-full h-10 w-full flex items-center justify-center text-white bg-[#01307c] rounded-lg hover:bg-[#0251d0] transition ease-in-out hover:duration-300 focus:outline-none"
                         >
-                            Sign Up
+                            {
+                                loader
+                                    ?
+                                    <div className="w-7 h-7 rounded-full animate-spin border-4 border-solid border-white border-t-transparent"></div>
+                                    :
+                                    <div>Sign Up</div>
+                            }
+
                         </button>
                     </div>
                 </form>
