@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import FacebookLogin from 'react-facebook-login';
+// import FacebookLogin from 'react-facebook-login';
 
 const LoginPage: React.FC = () => {
     const router = useRouter();
@@ -159,12 +159,12 @@ const LoginPage: React.FC = () => {
                         <FcGoogle size={25} />
                         <span className='ml-2'>Google</span>
                     </button> */}
-                            <FacebookLogin
+{/*                             <FacebookLogin
                                 appId='834731035056678'
                                 autoLoad={true}
                                 fields="name,email,picture"
                                 callback={responseFacebook}
-                            />
+                            /> */}
                     </div>
 
                 </div>
