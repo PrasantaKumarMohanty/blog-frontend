@@ -17,7 +17,7 @@ cd blog-frontend
 
 ```
 
-# For Frontend -
+## For Frontend -
 ```
 a. Go to the root project folder
 b. cd blog-frontend
@@ -32,7 +32,7 @@ You can go to signup page to signup otherwise use these existing credintials to 
 root path: http://localhost:3000/login
 ```
 
-# Deployed live url -
+## Deployed live url -
 https://blogs-chi-six.vercel.app/login
 
 ```
