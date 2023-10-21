@@ -1,4 +1,4 @@
-# Movies-Project-Frontent
+# Blog-Frontent
 
 Hii.. This project is developed by Prasanta Kumar Mohanty.
 
