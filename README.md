@@ -32,6 +32,9 @@ You can go to signup page to signup otherwise use these existing credintials to 
 root path: http://localhost:3000/login
 ```
 
+# Deployed live url -
+https://blogs-chi-six.vercel.app/login
+
 ```
 Finally, the project setup is completed. Enjoy this Blog project.
 ```
