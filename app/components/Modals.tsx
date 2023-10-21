@@ -36,7 +36,7 @@ const Modals: React.FC<EditModalProps> = ({ open, handleOpen, handleClose, messa
     const [description, setDescription] = useState('');
     const [loader, setLoader] = useState(false);
 
-    const cloudName = process.env.NEXT_PUBLIC_ANALYTICS_ID
+    const cloudName = "dvxsd4rds"
     const randomImg = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSezeZV4X0U6iMxfjDDDZfd6kGr_r91-kGseQ&usqp=CAU'
 
     const formik = useFormik({
