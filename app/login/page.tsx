@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-// import FacebookLogin from 'react-facebook-login';
+import { useSession } from 'next-auth/react';
 
 const LoginPage: React.FC = () => {
     const router = useRouter();

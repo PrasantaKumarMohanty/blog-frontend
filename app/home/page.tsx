@@ -5,21 +5,22 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Modals from '../components/Modals';
 import AppBars from '../components/AppBar';
-import Pagination from '../components/Pagination';
+import Typography from '@mui/material/Typography';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 const Home: React.FC = () => {
     const router = useRouter()
     const [allBlogs, setAllBlogs] = useState([]);
     const [open, setOpen] = React.useState(false);
     const [getDataLoader, setGetDataLoader] = useState(false);
+    const [totalPages, setTotalPages] = useState(1)
+    const [page, setPage] = React.useState(1);
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-    const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = 5;
-
-    const handlePageChange = (page: any) => {
-        setCurrentPage(page);
+    const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value);
     };
 
     const fetchBlogs = (page: any) => {
@@ -47,14 +48,12 @@ const Home: React.FC = () => {
     }
 
     useEffect(() => {
-        fetchBlogs(currentPage);
-    }, [currentPage]);
-
+        fetchBlogs(page);
+        setTotalPages(page + 1)
+    }, [page]);
 
     return (
-
         <div className='relative'>
-
             <Modals
                 open={open}
                 handleOpen={handleOpen}
@@ -104,15 +103,15 @@ const Home: React.FC = () => {
                                 )
                             })}
 
-                            <Pagination
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                onPageChange={handlePageChange}
-                            />
+                            <div className='w-full flex justify-end '>
+                                <Stack spacing={2}>
+                                    <Typography>Page: {page}</Typography>
+                                    <Pagination count={totalPages} page={page} onChange={handleChange} />
+                                </Stack>
+                            </div>
                         </div>
                     </div>
             }
-
         </div>
     );
 };
