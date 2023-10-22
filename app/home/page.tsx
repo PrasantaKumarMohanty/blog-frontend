@@ -16,6 +16,13 @@ const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
 });
 
+interface Blog {
+    title: any;
+    description: any;
+    image: any;
+    createdDate: any;
+}
+
 const Home: React.FC = () => {
     const router = useRouter()
     const [open, setOpen] = React.useState(false);
@@ -28,7 +35,8 @@ const Home: React.FC = () => {
     const [description, setDescription] = useState('');
     const [loader, setLoader] = useState(false);
     // Pusher
-    const [blogs, setBlogs] = useState([]);
+    const [blogs, setBlogs] = useState<Blog[]>([]);
+
     useEffect(() => {
         Pusher.logToConsole = true;
 
@@ -38,15 +46,14 @@ const Home: React.FC = () => {
 
         const channel = pusher.subscribe('blog');
         channel.bind('new-blog', (data: any) => {
-            setBlogs(
-                (prevBlogs) => [...prevBlogs, data.blog]
-            );
+            const newBlogData: Blog = { title: data.blog.title, description: data.blog.description, image: data.blog.image, createdDate: data.blog.createdDate };
+            setBlogs((prevBlogs: Blog[]) => [...prevBlogs, newBlogData]);
         });
 
-        // return () => {
-        //     pusher.unsubscribe('blog');
-        //     pusher.disconnect();
-        // };
+        return () => {
+            pusher.unsubscribe('blog');
+            pusher.disconnect();
+        };
     }, [])
 
     const randomImg = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSezeZV4X0U6iMxfjDDDZfd6kGr_r91-kGseQ&usqp=CAU'
