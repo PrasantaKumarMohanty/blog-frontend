@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import Modal from '@mui/material/Modal';
-import axios from 'axios';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -22,91 +19,26 @@ interface EditModalProps {
     handleOpen: any;
     handleClose: any;
     message: any;
-    id: any;
+    setSelectedImgFile: any;
+    formik: any;
+    setDescription: any;
+    description: any;
+    date: any;
+    loader: any;
 }
 
-const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-});
-
-const Modals: React.FC<EditModalProps> = ({ open, handleOpen, handleClose, message, id }) => {
-    const today = new Date();
-    const [selectedImgFile, setSelectedImgFile] = useState(null);
-    const [date, setDate] = useState(today.toString().substring(4, 15));
-    const [description, setDescription] = useState('');
-    const [loader, setLoader] = useState(false);
-
-    const cloudName = "dvxsd4rds"
-    const randomImg = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSezeZV4X0U6iMxfjDDDZfd6kGr_r91-kGseQ&usqp=CAU'
-
-    const formik = useFormik({
-        initialValues: {
-            name: '',
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-            setLoader(true);
-
-            if (message == "Add a new Blog") {
-                let data = JSON.stringify({
-                    "title": values.name,
-                    "description": description,
-                    "image": selectedImgFile != null ? selectedImgFile : randomImg,
-                    "createdDate": date
-                });
-
-                let config = {
-                    method: 'post',
-                    maxBodyLength: Infinity,
-                    url: 'https://blogs-g2mr.onrender.com/blogs/add-blog',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    data: data
-                };
-
-                axios.request(config)
-                    .then((response) => {
-                        // console.log(response.data);
-                        setLoader(false);
-                        handleClose();
-                    })
-                    .catch((error) => {
-                        setLoader(false);
-                        console.log(error);
-                    });
-            } else {
-                let data = JSON.stringify({
-                    "title": values.name,
-                    "description": description,
-                    "image": selectedImgFile != null ? selectedImgFile : randomImg,
-                    "createdDate": date
-                });
-
-                let config = {
-                    method: 'put',
-                    maxBodyLength: Infinity,
-                    url: `https://blogs-g2mr.onrender.com/blogs/edit-blog/${id}`,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    data: data
-                };
-
-                axios.request(config)
-                    .then((response) => {
-                        // console.log(response.data);
-                        setLoader(false);
-                        handleClose();
-                    })
-                    .catch((error) => {
-                        setLoader(false);
-                        console.log(error);
-                    });
-
-            }
-        },
-    });
+const Modals: React.FC<EditModalProps> = ({ open,
+    handleOpen,
+    handleClose,
+    message,
+    setSelectedImgFile,
+    formik,
+    setDescription,
+    description,
+    date,
+    loader
+}) => {
+    const cloudName = "dvxsd4rds";
 
     const handleFileUpload = async (event: any) => {
         const file = event.target.files[0];

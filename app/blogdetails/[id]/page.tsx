@@ -5,6 +5,12 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation'
 import Modals from '@/app/components/Modals';
 import AppBars from '@/app/components/AppBar';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+});
 
 const BlogDetails = ({ params }: {
     params: {
@@ -15,13 +21,23 @@ const BlogDetails = ({ params }: {
     let id = params.id;
     const [blogdetails, setBlogdetails] = useState([]);
     const [open, setOpen] = React.useState(false);
-    const [loader, setLoader] = useState(false);
+    const [dltLoader, setDltLoader] = useState(false);
     const [getDataLoader, setGetDataLoader] = useState(false);
+    const [selectedImgFile, setSelectedImgFile] = useState(null);
+    const [date, setDate] = useState();
+    const [description, setDescription] = useState('');
+    const [loader, setLoader] = useState(false);
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+    const randomImg = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSezeZV4X0U6iMxfjDDDZfd6kGr_r91-kGseQ&usqp=CAU'
+
     useEffect(() => {
+        getAllDetails();
+    }, [])
+
+    const getAllDetails = () => {
         let data = '';
         setGetDataLoader(true);
         let config = {
@@ -37,17 +53,56 @@ const BlogDetails = ({ params }: {
                 console.log("data", response.data);
                 setBlogdetails(response.data);
                 setGetDataLoader(false);
+                setDate(response.data.createdDate?.substring(0, 10));
             })
             .catch((error) => {
                 console.log(error);
                 setGetDataLoader(false);
                 alert("Something went wrong !");
             });
-    }, [])
+    }
+
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            setLoader(true);
+            let data = JSON.stringify({
+                "title": values.name,
+                "description": description,
+                "image": selectedImgFile != null ? selectedImgFile : randomImg,
+                "createdDate": date
+            });
+
+            let config = {
+                method: 'put',
+                maxBodyLength: Infinity,
+                url: `https://blogs-g2mr.onrender.com/blogs/edit-blog/${id}`,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            axios.request(config)
+                .then((response) => {
+                    // console.log(response.data);
+                    setLoader(false);
+                    handleClose();
+                    getAllDetails();
+                })
+                .catch((error) => {
+                    setLoader(false);
+                    console.log(error);
+                });
+        },
+    });
 
     const deleteBlog = () => {
         let data = '';
-        setLoader(true);
+        setDltLoader(true);
         let config = {
             method: 'delete',
             maxBodyLength: Infinity,
@@ -59,12 +114,12 @@ const BlogDetails = ({ params }: {
         axios.request(config)
             .then((response) => {
                 console.log("data", response.data.message);
-                setLoader(false);
+                setDltLoader(false);
                 router.push('/home');
             })
             .catch((error) => {
                 console.log(error);
-                setLoader(false);
+                setDltLoader(false);
             });
     }
 
@@ -75,7 +130,12 @@ const BlogDetails = ({ params }: {
                 handleOpen={handleOpen}
                 handleClose={handleClose}
                 message={"Edit the Blog"}
-                id={id}
+                setSelectedImgFile={setSelectedImgFile}
+                formik={formik}
+                description={description}
+                setDescription={setDescription}
+                loader={loader}
+                date={date}
             />
             <AppBars
                 handleOpen={handleOpen}
@@ -131,7 +191,7 @@ const BlogDetails = ({ params }: {
                                         className="w-1/2 h-10 flex items-center justify-center text-white bg-[#01307c] rounded-lg hover:bg-[#0251d0] transition ease-in-out hover:duration-300 focus:outline-none"
                                     >
                                         {
-                                            loader
+                                            dltLoader
                                                 ?
                                                 <div className="w-7 h-7 rounded-full animate-spin border-4 border-solid border-white border-t-transparent"></div>
                                                 :

@@ -8,17 +8,90 @@ import AppBars from '../components/AppBar';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import Pusher from 'pusher-js';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+});
 
 const Home: React.FC = () => {
     const router = useRouter()
-    const [allBlogs, setAllBlogs] = useState([]);
     const [open, setOpen] = React.useState(false);
     const [getDataLoader, setGetDataLoader] = useState(false);
     const [totalPages, setTotalPages] = useState(1)
     const [page, setPage] = React.useState(1);
+    const today = new Date();
+    const [selectedImgFile, setSelectedImgFile] = useState(null);
+    const [date, setDate] = useState(today.toString().substring(4, 15));
+    const [description, setDescription] = useState('');
+    const [loader, setLoader] = useState(false);
+    // Pusher
+    const [blogs, setBlogs] = useState([]);
+    useEffect(() => {
+        Pusher.logToConsole = true;
+
+        const pusher = new Pusher('cacd79915b62ca7459fe', {
+            cluster: 'ap2'
+        });
+
+        const channel = pusher.subscribe('blog');
+        channel.bind('new-blog', (data: any) => {
+            setBlogs(
+                (prevBlogs) => [...prevBlogs, data.blog]
+            );
+        });
+
+        // return () => {
+        //     pusher.unsubscribe('blog');
+        //     pusher.disconnect();
+        // };
+    }, [])
+
+    const randomImg = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSezeZV4X0U6iMxfjDDDZfd6kGr_r91-kGseQ&usqp=CAU'
+
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            setLoader(true);
+
+            let data = JSON.stringify({
+                "title": values.name,
+                "description": description,
+                "image": selectedImgFile != null ? selectedImgFile : randomImg,
+                "createdDate": date
+            });
+
+            let config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: 'https://blogs-g2mr.onrender.com/blogs/add-blog',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            axios.request(config)
+                .then((response) => {
+                    // console.log(response.data);
+                    setLoader(false);
+                    handleClose();
+                })
+                .catch((error) => {
+                    setLoader(false);
+                    console.log(error);
+                });
+        },
+    });
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
     };
@@ -37,7 +110,7 @@ const Home: React.FC = () => {
         axios.request(config)
             .then((response) => {
                 console.log("data", response.data);
-                setAllBlogs(response.data);
+                setBlogs(response.data)
                 setGetDataLoader(false);
             })
             .catch((error) => {
@@ -59,7 +132,12 @@ const Home: React.FC = () => {
                 handleOpen={handleOpen}
                 handleClose={handleClose}
                 message={"Add a new Blog"}
-                id={""}
+                setSelectedImgFile={setSelectedImgFile}
+                formik={formik}
+                description={description}
+                setDescription={setDescription}
+                loader={loader}
+                date={date}
             />
 
             <AppBars handleOpen={handleOpen} message={"Add a new Blog"} />
@@ -74,8 +152,7 @@ const Home: React.FC = () => {
                     :
                     <div className="container my-12 mx-auto px-4 md:px-12 ">
                         <div className="flex flex-wrap -mx-1 lg:-mx-4">
-
-                            {allBlogs?.map((blog: any) => {
+                            {blogs?.map((blog: any) => {
                                 return (
                                     <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
                                         <div className="overflow-hidden rounded-lg shadow-lg">
