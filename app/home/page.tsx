@@ -17,6 +17,7 @@ const validationSchema = Yup.object().shape({
 });
 
 interface Blog {
+    _id: any;
     title: any;
     description: any;
     image: any;
@@ -46,7 +47,8 @@ const Home: React.FC = () => {
 
         const channel = pusher.subscribe('blog');
         channel.bind('new-blog', (data: any) => {
-            const newBlogData: Blog = { title: data.blog.title, description: data.blog.description, image: data.blog.image, createdDate: data.blog.createdDate };
+            // console.log("blog==blog", data.blog)
+            const newBlogData: Blog = { _id: data.blog._id, title: data.blog.title, description: data.blog.description, image: data.blog.image, createdDate: data.blog.createdDate };
             setBlogs((prevBlogs: Blog[]) => [...prevBlogs, newBlogData]);
         });
 
